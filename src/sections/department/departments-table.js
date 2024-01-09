@@ -59,7 +59,7 @@ export const DepartmentsTable = (props) => {
                     key={department+index}
                   >
                     <TableCell>
-                      <a href={'/department-detail/LBM9Uk3wVjKC5xCGiMoY'}>
+                      <a href={'PM2-Frontend---employee/department-detail/LBM9Uk3wVjKC5xCGiMoY'}>
                         Detail
                       </a>
                     </TableCell>

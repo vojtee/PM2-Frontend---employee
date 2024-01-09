@@ -11,28 +11,14 @@ import {
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { OverviewLatestIssues } from 'src/sections/overview/overview-latest-issues';
 import { OverviewEmployeeIssuesGraph } from 'src/sections/overview/overview-employee-issues-graph';
-import { OverviewNotifications } from 'src/sections/overview/overview-notifications';
 import { OverviewIssueTypeGraph } from 'src/sections/overview/overview-issue-type-graph';
-import {useAuth} from "../hooks/use-auth";
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {endOfMonth, format, startOfMonth} from "date-fns";
 import createApiInstance from '../utils/api';
 
 const now = new Date();
 
 const Page = () => {
-
-// const user  = useAuth();
-//
-//   if (!user) {
-//       // V případě, že uživatel není přihlášen, nic nezobrazujeme
-//       return null;
-//   }else{
-//       console.log(user);
-//     //console.log(user.user.accessToken);
-//     //console.log(user.user.accessToken);
-//     //console.log(user.user.reloadUserInfo.customAttributes);
-//   }
 
   const instance = createApiInstance();
   const [employee, setEmployee] = useState(null);
@@ -52,8 +38,6 @@ const Page = () => {
     try {
       const response = await instance.get(`/api/v1/employees/me`);
       setEmployee(response.data);
-      console.log(response.data);
-
       const responseDept = await instance.get(`/api/v1/departments/${response.data?.departmentUid}`);
       setEmployeeDept(responseDept.data);
     } catch (error) {
@@ -87,7 +71,6 @@ const Page = () => {
     try {
       if (employee) {
         const startDate = format(startOfMonth(new Date()), 'yyyy-MM-dd');
-        console.log(startDate);
         const responseSolved = await instance.get(`api/v1/issues/employee/${employee?.uid}/count?from=${startDate}&statuses=SOLVED`);
         const responseSolving = await instance.get(`api/v1/issues/employee/${employee?.uid}/count?from=${startDate}&statuses=SOLVING`);
         const solvedCount = responseSolved.data.count;
@@ -105,7 +88,6 @@ const Page = () => {
   const getYearlyGraphData = async () => {
     try {
       if (employee) {
-        console.log("zacatek year dat");
         const currentYear = new Date().getFullYear();
         const lastYear = currentYear - 1;
         const months = Array.from({ length: 12 }, (_, month) => month);
@@ -133,8 +115,6 @@ const Page = () => {
           thisYear: thisYearCounts,
           lastYear: lastYearCounts,
         });
-        console.log("yearly graph data");
-        console.log(yearlyGraphData);
       }
     } catch (error) {
       console.log(error);
@@ -144,7 +124,6 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       await getEmployee();
-      console.log("employee fetched")
     };
     fetchData();
   }, []);
